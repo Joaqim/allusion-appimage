@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -e
+
+[ $(git diff --quiet origin/master PKGBUILD) ] && git checkout origin/master PKGBUILD
+
 pkgver_pkg=$(sed -ne 's/^pkgver=\(.*\)/\1/p' ./PKGBUILD)
 pkgrel_pkg=$(sed -ne 's/^pkgrel=\(.*\)/\1/p' ./PKGBUILD)
 
@@ -40,7 +43,7 @@ updated() {
 }
 
 update_pkg() {
-  #wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
+  wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
   sed -e "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('`shasum -a 256 Allusion-${gitver}.AppImage | grep -oe '^\S*'`')/" -i ./PKGBUILD
   sed -e "s/^pkgver=.*/pkgver=${pkgver}/" -i ./PKGBUILD
   sed -e "s/^pkgrel=.*/pkgrel=${pkgrel}/" -i ./PKGBUILD
@@ -56,6 +59,8 @@ update_pkg() {
     if [[ "$resp" =~ ^(yes|y)$ ]]; then
       git add .PKGBUILD .SRCINFO
       git commit -m "Updated allusion version: ${update_text}" .PKGBUILD .SRCINFO
+      git remote push github/update-script
+
       # Push to all [remote]/master
       git remote | xargs printf -- '%s master\n' | xargs -L1 git push
     fi
