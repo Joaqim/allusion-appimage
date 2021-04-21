@@ -4,6 +4,8 @@
 # or use:
 # $ curl -sL $(curl -s https://github.com/allusion-app/Allusion/releases | sed -n -e "s/^.*\(\/allusion-app\/Allusion\/releases\/download\/.*\/latest-linux.yml\)\".*/https:\/\/github.com\1/p" | head -n1)
 
+#timestamp: 2021-04-18T13:51:22.278Z
+
 pkgname=allusion-appimage
 pkgver=1.0.0
 pkgrel=2
