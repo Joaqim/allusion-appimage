@@ -10,6 +10,15 @@ giturl='https://github.com/allusion-app/Allusion/releases'
 version_url=$(curl -s "$giturl" | sed -ne "s/^.*\(\/allusion-app\/Allusion\/releases\/download\/.*\/latest-linux.yml\)\".*/https:\/\/github.com\1/p" | head -n1)
 version_info=$(curl -sL "$version_url")
 
+updated() { printf "Current version of Allusion is up-to-date.\nlatest-linux.yml:\n%s" "$version_info"; }
+
+# Check release date
+release_date_pkg=$(sed -ne 's/^#timestamp: \(\S*\)$/\1/p' ./PKGBUILD)
+[ -z "$release_date_pkg" ] && release_date_pkg=$(sed -ne 's/^#timestamp: \(\S*\) \(\S*\)$/\1T\2Z/p' ./PKGBUILD)
+release_date=$(echo "$version_info" | sed -ne "s/^releaseDate: '\(.*\)'/\1/p")
+
+[ "$release_date_pkg" == "$release_date" ] && updated && exit 0
+
 # Check for github release tag
 if [[ $(echo "$version_info" | grep -q -oe '^version: .*-.\{0,\}[[:digit:]]\+') -eq 0 ]]; then
   gitver=$(echo "$version_info" | sed -ne 's/^version: \(.*\)-\(.\+\)/\1-\2/p' | head -n1)
@@ -38,15 +47,14 @@ updated_readable() {
   fi
 }
 
-updated() {
-  printf "Current version of Allusion is up-to-date.\nlatest-linux.yml:\n%s" "$version_info"
-}
+
 
 update_pkg() {
   wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
   sed -e "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('`shasum -a 256 Allusion-${gitver}.AppImage | grep -oe '^\S*'`')/" -i ./PKGBUILD
   sed -e "s/^pkgver=.*/pkgver=${pkgver}/" -i ./PKGBUILD
   sed -e "s/^pkgrel=.*/pkgrel=${pkgrel}/" -i ./PKGBUILD
+  sed -e "s/^#timestamp: \S*$/#timestamp: ${release_date}/" -i ./PKGBUILD
   makepkg --printsrcinfo > .SRCINFO
   updated
 
