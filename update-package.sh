@@ -40,9 +40,9 @@ ver_lt() {
 updated_readable() {
   if ver_lte "$pkgver_pkg" "$pkgver"; then
     if [[ "$pkgver_pkg" == "$pkgver" ]] && ver_lt "$pkgrel_pkg" "$pkgrel"; then
-      printf "%s (local) -> %s (remote)" "$pkgver_pkg-$pkgrel_pkg" "$pkgver-$pkgrel"
+      printf "%s -> %s" "$pkgver-$pkgrel" "$pkgver_pkg-$pkgrel_pkg"
     else
-      printf "%s (local) -> %s (remote)" "$pkgver_pkg-$pkgrel_pkg" "$pkgver-$pkgrel"
+      printf "%s -> %s" "$pkgver-$pkgrel" "$pkgver_pkg-$pkgrel_pkg"
     fi
   fi
 }
@@ -58,10 +58,10 @@ update_remote() {
     if [[ "$resp" =~ ^(yes|y)$ ]]; then
       git add PKGBUILD .SRCINFO
       git commit -m "Updated allusion version: ${update_text}" PKGBUILD .SRCINFO
-      #git push github source
+      git push github source
 
       # Push last commit to all [remote]/master
-      #git remote | xargs printf -- '%s HEAD~1:master\n' | xargs -L1 git push
+      git remote | xargs printf -- '%s HEAD~1:master\n' | xargs -L1 git push
     fi
   fi
 }
