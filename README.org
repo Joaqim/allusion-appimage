@@ -1,0 +1,17 @@
+* Allusion AppImage - AUR Package
+  :PROPERTIES:
+  :CUSTOM_ID: allusion-appimage---aur-package
+  :END:
+[[https://github.com/allusion-app/Allusion][Allusion]]\\
+[[https://aur.archlinux.org/packages/allusion-appimage][AUR Package]]
+
+** [[https://github.com/joaqim/allusion-appimage/blob/update-script/update-package.sh][update-package.sh]]
+   :PROPERTIES:
+   :CUSTOM_ID: update-package.sh
+   :END:
+
+#+begin_src shell :exports results :results output
+  pygmentize update-package.sh
+#+end_src
+
+#+include: update-package.sh src bash
