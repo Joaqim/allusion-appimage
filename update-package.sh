@@ -80,6 +80,8 @@ update_pkg() {
 main() {
   if [ "$1" == "push" ]; then
     update_remote
+  elif [ "$1" == "force_update" ]; then
+    update_pkg
   elif ver_lte "$pkgver_pkg" "$pkgver" ; then
     [[ "$pkgver_pkg" == "$pkgver" ]] && ver_lt "$pkgrel_pkg" "$pkgrel" && update_pkg || updated
   else
