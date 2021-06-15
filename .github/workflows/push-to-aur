@@ -1,0 +1,32 @@
+name: push-to-aur
+
+on:
+    push:
+        branches: [ master ]
+
+jobs:
+    push-to-repo:
+        runs-on: ubuntu-latest
+        container:
+            image: archlinux
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v1
+            - name: Install dependencies
+              run: pacman -Syyu base-devel git --noconfirm --needed
+            - name: Clone repository
+              run: git clone https://github.com/joaqim/allusion-appimage --branch source
+            - name: Update repository
+              run: |
+                  git pull https://aur.archlinux.org/allusion-appimage.git
+            - name: Set identity and commit
+              run: |
+                  git config --local user.name "Github Action Update Bot"
+                  git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+                  git commit -a -m "Update allusion-appimage"
+            - name: Push changes
+              uses: ad-m/github-push-action@master
+              with:
+                github_token: ${{ secrets.ACCESS_TOKEN }}
+                branch: master
+                repository: joaqim/allusion-appimage
