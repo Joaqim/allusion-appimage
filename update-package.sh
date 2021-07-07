@@ -18,7 +18,6 @@ release_date_pkg=$(sed -ne 's/^#timestamp: \(\S*\)$/\1/p' ./PKGBUILD)
 release_date=$(echo "$version_info" | sed -ne "s/^releaseDate: '\(.*\)'/\1/p")
 
 #[ "$release_date_pkg" == "$release_date" ] && updated && exit 0
-
 # Check for github release tag
 if [[ $(echo "$version_info" | grep -q -oe '^version: .*-.\{0,\}[[:digit:]]\+') -eq 0 ]]; then
   gitver=$(echo "$version_info" | sed -ne 's/^version: \(.*\)-\(.\+\)/\1-\2/p' | head -n1)
@@ -50,14 +49,14 @@ updated_readable() {
 update_remote() {
   updated
   update_text="$(updated_readable)"
-  if [ ! -z "$update_text" ]; then
+  if [ ! -z "${update_text}" ]; then
     git diff origin/master PKGBUILD
-    printf "\n$update_text\n"
+    printf "\n${update_text}\n"
     read -r -p "Do you want to push to aur? [y/N] " resp
     resp=${resp,,}
     if [[ "$resp" =~ ^(yes|y)$ ]]; then
       git add PKGBUILD .SRCINFO
-      git commit -m "Updated allusion version: ${update_text}" PKGBUILD .SRCINFO
+      git commit -m "Updated Allusion version: ${update_text}" PKGBUILD .SRCINFO
       git push github source
 
       # Push last commit to all [remote]/master
@@ -68,9 +67,10 @@ update_remote() {
 
 
 update_pkg() {
-  wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
+  #wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
   sed -e "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('`shasum -a 256 Allusion-${gitver}.AppImage | grep -oe '^\S*'`')/" -i ./PKGBUILD
   sed -e "s/^pkgver=.*/pkgver=${pkgver}/" -i ./PKGBUILD
+  # TODO: Make sure pkgrel is incremented correctly
   sed -e "s/^pkgrel=.*/pkgrel=${pkgrel}/" -i ./PKGBUILD
   sed -e "s/^#timestamp: \S*$/#timestamp: ${release_date}/" -i ./PKGBUILD
   makepkg --printsrcinfo > .SRCINFO
