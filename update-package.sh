@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -ex
 
-#[ $(git diff --quiet origin/master PKGBUILD) ] && git checkout origin/master PKGBUILD
+[ $(git diff --quiet origin/master PKGBUILD) ] && git checkout origin/master PKGBUILD
+
+
 
 pkgver_pkg=$(sed -ne 's/^pkgver=\(.*\)/\1/p' ./PKGBUILD)
 pkgrel_pkg=$(sed -ne 's/^pkgrel=\(.*\)/\1/p' ./PKGBUILD)
@@ -67,7 +69,7 @@ update_remote() {
 
 
 update_pkg() {
-  #wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
+  wget "$giturl/download/v${gitver}/Allusion-${gitver}.AppImage" -O "./Allusion-${gitver}.AppImage"
   sed -e "s/^sha256sums_x86_64=.*/sha256sums_x86_64=('`shasum -a 256 Allusion-${gitver}.AppImage | grep -oe '^\S*'`')/" -i ./PKGBUILD
   sed -e "s/^pkgver=.*/pkgver=${pkgver}/" -i ./PKGBUILD
   # TODO: Make sure pkgrel is incremented correctly
