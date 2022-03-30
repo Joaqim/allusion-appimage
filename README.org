@@ -3,9 +3,11 @@
   :CUSTOM_ID: allusion-appimage---aur-package
   :END:
 
-This is a over-engineered bash script to update PKGBUILD and .SRCINFO for my user submitted and maintaned package installer for Allusion Appimage.
+This is a over-engineered bash script to update PKGBUILD and .SRCINFO for my user submitted and user maintained [[https://wiki.archlinux.org/title/PKGBUILD][pkgbuild]] for Allusion Appimage.
 
 This is not an official installer and it is not maintained by the developers of Allusion.
 
-[[https://github.com/allusion-app/Allusion][Allusion App official Github Repository]]\\
-[[https://aur.archlinux.org/packages/allusion-appimage][Unofficial AUR Package on aur.archlinux.org]]
+You can find the offical github repository for Allusion App here: [[https://github.com/allusion-app/Allusion][allusion-app/Allusion]]\\
+
+This package can be found on the Arch Linux User Repository [[https://aur.archlinux.org][(AUR)]] here: [[https://aur.archlinux.org/packages/allusion-appimage][allusion-appimage]]
+
